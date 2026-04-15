@@ -1,0 +1,120 @@
+// ─── User Nav Dropdown — STL Premium dark ────────────────────────────────────
+
+.user-nav {
+  margin-left: $m-size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 0.4rem $s-size;
+  border-radius: 8px;
+  @include bezier-transition(background, .2s, ease);
+
+  &:hover {
+    cursor: pointer;
+    background: rgba($brand-cyan, 0.06);
+  }
+
+  h5 {
+    color: $text-200;
+    font-size: 1.3rem;
+    font-weight: 500;
+    max-width: 100px;
+  }
+
+  @include mobile { width: 100%; }
+
+  // Ícono de flecha
+  .anticon {
+    color: $text-300;
+    transition: transform .2s ease;
+  }
+}
+
+.user-sub-open {
+  background: rgba($brand-cyan, 0.06);
+
+  .anticon {
+    color: $brand-cyan;
+    transform: rotate(180deg);
+  }
+
+  & > .user-nav-sub {
+    display: block;
+    animation: fadeInDown .15s ease;
+  }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Avatar circular ──────────────────────────────────────────────────────────
+.user-nav-img-wrapper {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-left: 8px;
+  position: relative;
+  background: $brand-cyan;
+  border: 2px solid rgba($brand-cyan, 0.4);
+  flex-shrink: 0;
+}
+
+.user-nav-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+// ── Dropdown panel ────────────────────────────────────────────────────────────
+.user-nav-sub {
+  width: 180px;
+  height: auto;
+  background: $bg-700;
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba($brand-cyan, 0.08);
+  display: none;
+  overflow: hidden;
+  z-index: 200;
+}
+
+// ── Links del dropdown ────────────────────────────────────────────────────────
+.user-nav-sub-link {
+  font-size: 1.35rem;
+  font-weight: 500;
+  font-family: $font-body;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.4rem;
+  color: $text-200;
+  text-decoration: none;
+  @include bezier-transition(all, .15s, ease);
+
+  .anticon { color: $text-300; font-size: 1.4rem; }
+
+  &:hover {
+    background: rgba($brand-cyan, 0.07);
+    color: $brand-cyan;
+    text-decoration: none;
+
+    .anticon { color: $brand-cyan; }
+  }
+
+  &:first-child {
+    border-bottom: 1px solid $border-color;
+  }
+
+  // Cerrar sesión — acento rojo en hover
+  &:last-child:hover {
+    background: rgba($brand-cyan, 0.06);
+    color: $brand-cyan;
+  }
+}

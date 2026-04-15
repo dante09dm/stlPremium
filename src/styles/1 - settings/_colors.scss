@@ -1,0 +1,67 @@
+//
+// COLORS — STL Premium dark futurista
+//
+
+// ── Brand tokens ─────────────────────────────────────────
+$brand-cyan:   #ff2442;   // acento principal rojo vibrante
+$brand-violet: #991b1b;   // acento secundario rojo oscuro / profundidad
+$brand-gold:   #ff6b6b;   // acento cálido / CTA secundario
+$brand-glow:   rgba(255, 36, 66, 0.15);
+
+// ── Fondos ───────────────────────────────────────────────
+$bg-900: #0a0a0a;   // fondo base negro puro
+$bg-800: #0f0f0f;   // body principal
+$bg-700: #161616;   // cards, paneles
+$bg-600: #1e1e1e;   // hover de cards
+$bg-500: #2a2a2a;   // bordes interiores / divisores
+
+// ── Texto ────────────────────────────────────────────────
+$text-100: #f1f5f9;   // headings
+$text-200: #94a3b8;   // body / párrafos
+$text-300: #64748b;   // muted / placeholders
+
+// ── Bordes ───────────────────────────────────────────────
+$border-color:       #252525;
+$border-color-focus: $brand-cyan;
+
+// ── Legacy aliases (usados en el resto del SCSS) ─────────
+:root {
+  --nav-bg:          #{$bg-900};
+  --nav-bg-scrolled: #{$bg-800};
+  --nav-bg-shadow:   0 4px 24px rgba(0,0,0,.8);
+  --brand-red:       #{$brand-cyan};
+  --brand-red-dark:  #{$brand-violet};
+  --brand-red-light: #{$brand-gold};
+}
+
+$nav-bg:         $bg-900;
+$nav-bg-scrolled: $bg-800;
+
+$background-color:    $bg-800;
+$background-color-01: $bg-700;
+
+$paragraph-color: $text-200;
+$heading-color:   $text-100;
+
+$white:    #ffffff;
+$black:    #000000;
+$off-black: $bg-700;
+$off-white: $text-200;
+
+$red:    #f87171;
+$green:  #34d399;
+$yellow: $brand-gold;
+
+$gray-01: #1e2d40;
+$gray-10: $text-300;
+$gray-20: $text-200;
+
+$button-color: $brand-cyan;
+$button-hover: darken($brand-cyan, 8%);
+
+$color-facebook: #0078ff;
+$color-facebook-hover: darken($color-facebook, 5%);
+$color-github: #24292e;
+$color-github-hover: lighten($color-github, 5%);
+
+$color-success: $brand-cyan;

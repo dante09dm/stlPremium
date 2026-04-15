@@ -1,0 +1,67 @@
+// ─── Footer — STL Premium dark ───────────────────────────────────────────────
+
+.footer {
+  position: relative;
+  padding: 3rem $xxl-size;
+  background: $bg-900;
+  border-top: 1px solid $border-color;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @include mobile {
+    padding: 2.5rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  p, span { color: $text-300; font-size: 1.3rem; }
+
+  a {
+    color: $text-200;
+    text-decoration: none;
+    @include bezier-transition(color, .2s, ease);
+    &:hover { color: $brand-cyan; }
+  }
+}
+
+.footer-logo {
+  height: 3.6rem;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba($brand-cyan, 0.3));
+}
+
+.footer-col {
+  flex: 1;
+  display: flex;
+  align-items: center;
+
+  @include mobile {
+    flex-direction: column;
+    margin: $s-size 0;
+    justify-content: center;
+  }
+}
+
+.footer-col-1 {
+  justify-content: flex-start;
+  @include mobile { order: 1; }
+}
+
+.footer-col-2 {
+  justify-content: center;
+  text-align: center;
+  @include mobile { order: 3; }
+}
+
+.footer-col-3 {
+  justify-content: flex-end;
+  @include mobile { order: 2; width: 100%; display: flex; justify-content: center; }
+}
+
+.footer-col > * {
+  margin: 0 $s-size;
+  @include mobile { margin: $s-size 0; }
+}

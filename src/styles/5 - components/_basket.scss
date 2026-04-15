@@ -1,0 +1,220 @@
+.basket {
+  width: 60rem;
+  height: 100vh;
+  background: $bg-800;
+  position: fixed;
+  top: 0;
+  right: 0;
+  transform: translateX(100%);
+  box-shadow: -4px 0 30px rgba(0, 0, 0, .5);
+  @include bezier-transition(transform);
+  z-index: map-get($z-index, 'basket');
+
+  @include mobile {
+    width: 100%;
+  }
+}
+
+.basket-toggle {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.basket-list {
+  padding: $m-size;
+  padding-bottom: 160px; // Espacio adicional para no tapar el checkout
+  overflow-y: scroll;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  // Scrollbar visible en móviles
+  scrollbar-width: thin; // Firefox
+  &::-webkit-scrollbar {
+    width: 4px; // Chrome/Safari
+  }
+}
+
+.basket-item {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: $bg-700;
+  border-radius: 8px;
+  margin-bottom: $s-size;
+  padding: $s-size;
+  @include bezier-transition();
+  animation: slide-up .5s ease;
+}
+
+.basket-item-wrapper {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 90px 1fr 100px auto;
+  gap: $s-size;
+  align-items: center;
+}
+
+.basket-item-specs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+
+  .spec-title {
+    color: #8d8d8d;
+    font-size: 12px;
+    display: block;
+    margin-bottom: 5px;
+  }
+}
+
+.basket-empty {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.basket-empty-msg {
+  color: $gray-10;
+}
+
+.basket-header {
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: -20px;
+  background: $bg-800;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding-bottom: 1rem;
+  z-index: map-get($z-index, 'basket');
+}
+
+.basket-header-title {
+  flex-grow: 1;
+}
+
+.basket-header button {
+  margin-right: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+.basket-item-img-wrapper {
+  width: 90px;
+  height: 90px;
+  margin-right: $m-size;
+  position: relative;
+}
+
+.basket-item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.basket-item-details {
+  flex-grow: 1;
+}
+
+.basket-item-price {
+  text-align: right;
+  margin-right: 2rem;
+  white-space: nowrap;
+}
+
+.basket-item-name {
+  margin: $s-size 0;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  position: relative;
+}
+
+.basket-item-remove {
+  align-self: center;
+}
+
+.basket-clear {
+  align-self: center;
+}
+
+.basket-checkout {
+  background: $bg-800;
+  position: sticky;
+  bottom: 0;
+  right: 0;
+  padding: $m-size;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  z-index: map-get($z-index, 'basket');
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+  gap: 1rem; // Añadimos espacio entre los elementos
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: .5px;
+    background: $border-color;
+  }
+}
+
+.basket-checkout-button {
+  font-size: $font-medium;
+  padding: $m-size $l-size;
+  text-transform: uppercase;
+  margin-left: auto; // Separa el botón del subtotal
+  border: none;
+  background-color: black;
+  color: white;
+  border-radius: 4px;
+
+  @include mobile {
+    width: 100%; // Opcional: hace que el botón ocupe el 100% en móviles
+    margin-left: 0;
+    margin-top: 1rem;
+  }
+}
+
+.basket-total {
+  margin-left: auto;
+  text-align: right;
+}
+
+.basket-total-title {
+  font-size: $font-small;
+  margin: 0;
+}
+
+.basket-total-amount {
+  margin: $s-size 0;
+}
+
+.basket-item-control {
+  width: 30px;
+  height: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+.basket-control {
+  width: 35px;
+  height: 100%;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.basket-control-count {
+  margin: 5px;
+}
+
+

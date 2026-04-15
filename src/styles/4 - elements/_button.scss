@@ -1,0 +1,126 @@
+// ─── Buttons — STL Premium dark ─────────────────────────────────────────────
+
+.button {
+  background: $brand-cyan;
+  padding: $m-size $l-size;
+  border: 1.5px solid $brand-cyan;
+  color: $bg-900;
+  font-family: $font-display;
+  font-weight: 700;
+  font-size: 1.4rem;
+  border-radius: 8px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 0 16px rgba($brand-cyan, 0.25);
+  @include bezier-transition(all, .25s, ease);
+
+  &:hover {
+    cursor: pointer;
+    background: lighten($brand-cyan, 6%);
+    border-color: lighten($brand-cyan, 6%);
+    box-shadow: 0 0 28px rgba($brand-cyan, 0.45);
+    text-decoration: none;
+    color: $bg-900;
+    transform: translateY(-1px);
+  }
+}
+
+.button:disabled {
+  opacity: .4;
+  box-shadow: none;
+  transform: none;
+
+  &:hover { cursor: not-allowed; }
+}
+
+.button-link {
+  @extend .button;
+  background: none;
+  color: $text-200;
+  border: none;
+  box-shadow: none;
+
+  &:hover {
+    background: rgba($brand-cyan, 0.07);
+    border: none;
+    color: $brand-cyan;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+.button-muted {
+  @extend .button;
+  background: $bg-700;
+  color: $text-200;
+  border: 1.5px solid $border-color;
+  box-shadow: none;
+
+  &:hover {
+    background: $bg-600;
+    border-color: rgba($brand-cyan, 0.4);
+    color: $brand-cyan;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+.button-block {
+  display: block;
+  width: 100%;
+}
+
+.button-border {
+  background: transparent;
+  border: 1.5px solid $brand-cyan;
+  color: $brand-cyan;
+  box-shadow: none;
+
+  &:hover {
+    background: rgba($brand-cyan, 0.08);
+    border-color: $brand-cyan;
+    box-shadow: 0 0 12px rgba($brand-cyan, 0.2);
+  }
+}
+
+.button-danger {
+  background: $red;
+  color: $white;
+  border-color: $red;
+  box-shadow: none;
+
+  &:hover {
+    background: darken($red, 8%);
+    border-color: darken($red, 8%);
+  }
+}
+
+.button-border-gray {
+  border: 1.5px solid $border-color;
+  color: $text-200;
+  background: transparent;
+  box-shadow: none;
+
+  &:hover {
+    border-color: rgba($brand-cyan, 0.4);
+    background: rgba($brand-cyan, 0.04);
+    color: $brand-cyan;
+    box-shadow: none;
+  }
+}
+
+.button-small {
+  font-size: $font-small;
+  padding: $s-size $m-size;
+}
+
+.button-icon {
+  display: inline-flex;
+  align-items: center;
+  text-align: center;
+
+  & * { font-size: inherit; }
+}

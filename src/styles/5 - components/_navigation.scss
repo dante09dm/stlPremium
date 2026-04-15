@@ -1,0 +1,187 @@
+// ─── Navigation — STL Premium dark futurista ────────────────────────────────
+
+.navigation {
+  width: 100%;
+  height: 7rem;
+  background: rgba($bg-900, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba($brand-cyan, 0.08);
+  display: flex;
+  align-items: center;
+  padding: 0 5rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: map-get($z-index, navigation);
+  @include bezier-transition(background, .3s, ease);
+
+  &.is-nav-scrolled {
+    background: rgba($bg-900, 0.97);
+    border-bottom-color: rgba($brand-cyan, 0.18);
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
+  }
+
+  @include tablet { padding: 0 2rem; }
+  @include mobile { padding: 0 1.5rem; position: fixed; }
+
+  .logo {
+    height: 4.8rem;
+    margin-right: 3rem;
+    flex-shrink: 0;
+  }
+
+  .logo img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba($brand-cyan, 0.4));
+  }
+
+  .logo a {
+    display: block;
+    height: 100%;
+  }
+
+  .searchbar {
+    width: 280px;
+  }
+}
+
+// ── Navegación principal (Home / Shop) ───────────────────────────────────────
+.navigation-menu-main {
+  padding-left: 0;
+  margin-right: 2rem;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+
+  li { display: inline-flex; }
+
+  a {
+    padding: 0.6rem 1.2rem;
+    font-size: 1.35rem;
+    font-family: $font-display;
+    font-weight: 500;
+    color: $text-200;
+    text-decoration: none;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+    @include bezier-transition(all, .2s, ease);
+
+    &:hover {
+      color: $brand-cyan;
+      background: rgba($brand-cyan, 0.07);
+    }
+  }
+}
+
+.navigation-menu-active {
+  color: $brand-cyan !important;
+  background: rgba($brand-cyan, 0.1) !important;
+}
+
+// ── Menú derecho ─────────────────────────────────────────────────────────────
+.navigation-menu {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.navigation-menu-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.navigation-menu-link {
+  color: $text-200;
+  padding: 0.8rem;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include bezier-transition(all, .2s, ease);
+
+  &:hover {
+    color: $brand-cyan;
+    background: rgba($brand-cyan, 0.08);
+  }
+
+  // Ícono del carrito
+  .anticon { font-size: 2rem !important; }
+}
+
+// ── Basket toggle ─────────────────────────────────────────────────────────────
+.basket-toggle {
+  position: relative;
+}
+
+// ── Botones de acción (Sign in / Register) ───────────────────────────────────
+.navigation-action {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: 1.5rem;
+
+  .button {
+    padding: 0.6rem 1.4rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1.5px solid $brand-cyan;
+    background: transparent;
+    color: $brand-cyan;
+    @include bezier-transition(all, .2s, ease);
+
+    &:hover {
+      background: $brand-cyan;
+      color: $bg-900;
+    }
+  }
+
+  .button-muted {
+    border-color: $border-color;
+    color: $text-200;
+    background: transparent;
+
+    &:hover {
+      border-color: $brand-cyan;
+      color: $brand-cyan;
+      background: rgba($brand-cyan, 0.06);
+    }
+  }
+}
+
+// ── Admin nav ────────────────────────────────────────────────────────────────
+.navigation-admin {
+  height: 6rem;
+  background: $bg-800;
+  border-bottom: 1px solid $border-color;
+  padding: 0 $l-size;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// ── Filtro pill ───────────────────────────────────────────────────────────────
+.button-muted.button-small {
+  background: rgba($brand-cyan, 0.06);
+  border: 1px solid rgba($brand-cyan, 0.2);
+  color: $brand-cyan;
+  font-size: 1.3rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  @include bezier-transition(all, .2s, ease);
+
+  &:hover {
+    background: rgba($brand-cyan, 0.15);
+    border-color: $brand-cyan;
+  }
+}

@@ -1,0 +1,134 @@
+/* eslint-disable max-len */
+import { BasketItem, BasketToggle } from '@/components/basket';
+import { Boundary } from '@/components/common';
+import { CHECKOUT_STEP_1 } from '@/constants/routes';
+import firebase from 'firebase/firebase';
+import { calculateTotal, displayMoney } from '@/helpers/utils';
+import { useDidMount } from '@/hooks';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
+import { clearBasket } from '@/redux/actions/basketActions';
+
+const Basket = () => {
+  const { basket, user } = useSelector((state) => ({
+    basket: state.basket,
+    user: state.auth
+  }));
+  const history = useHistory();
+  const { pathname } = useLocation();
+  const dispatch = useDispatch();
+  const didMount = useDidMount();
+
+  useEffect(() => {
+    if (didMount && firebase.auth.currentUser && basket.length !== 0) {
+      firebase.saveBasketItems(basket, firebase.auth.currentUser.uid)
+        .then(() => {
+          console.log('Item saved to basket');
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  }, [basket.length]);
+
+  const onCheckOut = () => {
+    console.log('Usuario actual:', firebase.auth.currentUser); // Depuración
+    console.log('Carrito actual:', basket); // Depuración
+
+    if (basket.length !== 0) {
+      // Guardar el carrito en localStorage si el usuario no está autenticado
+      if (!firebase.auth.currentUser) {
+        localStorage.setItem('basket', JSON.stringify(basket));
+        console.log('Carrito guardado en localStorage:', basket); // Depuración
+      }
+
+      document.body.classList.remove('is-basket-open');
+      history.push(CHECKOUT_STEP_1);
+    } else {
+      console.error('El carrito está vacío'); // Depuración
+    }
+  };
+
+  const onClearBasket = () => {
+    if (basket.length !== 0) {
+      dispatch(clearBasket());
+
+      // Limpiar el carrito en localStorage si el usuario no está autenticado
+      if (!firebase.auth.currentUser) {
+        localStorage.removeItem('basket');
+        console.log('Carrito eliminado de localStorage'); // Depuración
+      }
+    }
+  };
+
+  return user && user.role === 'ADMIN' ? null : (
+    <Boundary>
+      <div className="basket">
+        <div className="basket-list">
+          <div className="basket-header">
+            <h3 className="basket-header-title">
+              Mi compra &nbsp;
+              <span>
+                (
+                {` ${basket.length} ${basket.length > 1 ? 'items' : 'item'}`}
+                )
+              </span>
+            </h3>
+            <BasketToggle>
+              {({ onClickToggle }) => (
+                <span
+                  className="basket-toggle button button-border button-border-gray button-small"
+                  onClick={onClickToggle}
+                  role="presentation"
+                >
+                  Cerrar
+                </span>
+              )}
+            </BasketToggle>
+            <button
+              className="basket-clear button button-border button-border-gray button-small"
+              disabled={basket.length === 0}
+              onClick={onClearBasket}
+              type="button"
+            >
+              <span>Limpiar compra</span>
+            </button>
+          </div>
+          {basket.length <= 0 && (
+            <div className="basket-empty">
+              <h5 className="basket-empty-msg">Tu compra está vacía</h5>
+            </div>
+          )}
+          {basket.map((product, i) => (
+            <BasketItem
+              // eslint-disable-next-line react/no-array-index-key
+              key={`${product.id}_${i}`}
+              product={product}
+              basket={basket}
+              dispatch={dispatch}
+            />
+          ))}
+        </div>
+        <div className="basket-checkout">
+          <div className="basket-total">
+            <p className="basket-total-title">Subtotal</p>
+            <h2 className="basket-total-amount">
+              {displayMoney(calculateTotal(basket.map((product) => (product.price || 0))))}
+            </h2>
+          </div>
+          <button
+            className="basket-checkout-button button"
+            disabled={basket.length === 0 || pathname === '/checkout'}
+            onClick={onCheckOut}
+            type="button"
+          >
+            Check Out
+          </button>
+        </div>
+      </div>
+    </Boundary>
+  );
+};
+
+export default Basket;
