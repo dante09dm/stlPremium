@@ -31,7 +31,7 @@ const FormSchema = Yup.object().shape({
 });
 
 const EditProfile = () => {
-  useDocumentTitle('Editar cuenta | Bodnes');
+  useDocumentTitle('Editar cuenta | STL Premium');
   useScrollTop();
 
   const modal = useModal();

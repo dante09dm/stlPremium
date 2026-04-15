@@ -29,7 +29,7 @@ const SignIn = ({ history }) => {
   const dispatch = useDispatch();
 
   useScrollTop();
-  useDocumentTitle('Iniciar sesión | Bodnes');
+  useDocumentTitle('Iniciar sesión | STL Premium');
 
   useEffect(() => () => {
     dispatch(setAuthStatus(null));

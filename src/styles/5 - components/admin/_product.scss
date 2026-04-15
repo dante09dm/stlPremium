@@ -99,6 +99,34 @@
   margin-left: $s-size;
 }
 
+// ── Responsive admin tabla ────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .product-admin-header {
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    position: static;
+  }
+
+  .product-admin-header-title {
+    font-size: 1.1rem;
+  }
+
+  .product-admin-items {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0;
+  }
+
+  .grid-product {
+    min-width: 500px;
+  }
+
+  .item {
+    min-width: 500px;
+  }
+}
+
 .item-img {
   width: 100%;
   height: 100%;

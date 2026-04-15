@@ -32,7 +32,7 @@ const SignUp = ({ history }) => {
   const dispatch = useDispatch();
 
   useScrollTop();
-  useDocumentTitle('Registrarse | Bodnes');
+  useDocumentTitle('Registrarse | STL Premium');
 
   useEffect(() => () => {
     dispatch(setAuthStatus(null));
@@ -68,7 +68,7 @@ const SignUp = ({ history }) => {
           )}
           <div className={`auth ${authStatus?.message && (!authStatus?.success && 'input-error')}`}>
             <div className="auth-main">
-              <h3>Registrarse en Bodnes</h3>
+              <h3>Registrarse en STL Premium</h3>
               <Formik
                 initialValues={{
                   fullname: '',

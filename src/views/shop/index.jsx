@@ -44,7 +44,7 @@ const CategoryBar = ({ products, activeCategory }) => {
 };
 
 const Shop = () => {
-  useDocumentTitle('Tienda | Bodnes');
+  useDocumentTitle('Tienda | STL Premium');
   useScrollTop();
 
   const store = useSelector((state) => ({

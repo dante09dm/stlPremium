@@ -93,13 +93,17 @@ h1, h2, h3, h4, h5, h6 {
 .content-admin {
   width: 100%;
   height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
   position: relative;
   padding-top: $xxl-size;
   overflow: hidden;
   display: flex;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
 }
 
 .content-admin-wrapper {
@@ -109,4 +113,9 @@ h1, h2, h3, h4, h5, h6 {
   padding-top: 0;
   animation: fadeIn .5s ease;
   position: relative;
+
+  @media (max-width: 768px) {
+    overflow-y: visible;
+    overflow-x: hidden;
+  }
 }

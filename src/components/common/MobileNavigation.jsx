@@ -4,6 +4,7 @@ import PropType from 'prop-types';
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import UserNav from '@/views/account/components/UserAvatar';
+import logo from '@/images/logo.svg';
 import Badge from './Badge';
 import FiltersToggle from './FiltersToggle';
 import SearchBar from './SearchBar';
@@ -23,7 +24,7 @@ const Navigation = (props) => {
       <div className="mobile-navigation-main">
         <div className="mobile-navigation-logo">
           <Link onClick={onClickLink} to={HOME}>
-            <h2>BODNES</h2>
+            <img src={logo} alt="STL Premium" style={{ height: '32px', display: 'block' }} />
           </Link>
         </div>
 

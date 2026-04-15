@@ -36,7 +36,7 @@ const FormSchema = Yup.object().shape({
 });
 
 const ShippingDetails = ({ profile, shipping, subtotal, basket }) => {
-  useDocumentTitle('Check Out Paso 2 | Bodnes');
+  useDocumentTitle('Check Out Paso 2 | STL Premium');
   useScrollTop();
   const dispatch = useDispatch();
   const history = useHistory();

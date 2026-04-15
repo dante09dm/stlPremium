@@ -5,6 +5,15 @@
   position: relative;
   padding-top: 1rem;
   border-right: 1px solid $border-color;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid $border-color;
+    padding-top: 0;
+  }
 }
 
 .sidenavigation-wrapper {
@@ -12,6 +21,18 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 768px) {
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.sidenavigation-item {
+  @media (max-width: 768px) {
+    flex-shrink: 0;
+  }
 }
 
 .sidenavigation-menu {
@@ -21,11 +42,16 @@
   font-weight: 500;
   font-size: 0.9rem;
   transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
 
   &:hover {
     background: rgba($brand-cyan, 0.06);
     color: $text-100;
     text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem 1.5rem;
   }
 }
 
@@ -34,4 +60,9 @@
   color: $text-100 !important;
   border-right: 3px solid $brand-cyan;
   font-weight: 700;
+
+  @media (max-width: 768px) {
+    border-right: none;
+    border-bottom: 3px solid $brand-cyan;
+  }
 }

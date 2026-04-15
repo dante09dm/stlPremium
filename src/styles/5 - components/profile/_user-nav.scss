@@ -22,7 +22,12 @@
     max-width: 100px;
   }
 
-  @include mobile { width: 100%; }
+  @include mobile { width: auto; }
+
+  @media (max-width: 768px) {
+    h5 { display: none; }
+    margin-left: 0.5rem;
+  }
 
   // Ícono de flecha
   .anticon {

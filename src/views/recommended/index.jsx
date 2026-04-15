@@ -5,7 +5,7 @@ import bannerImg from '@/images/banner-girl-1.png';
 import React from 'react';
 
 const RecommendedProducts = () => {
-  useDocumentTitle('Productos recomendados | Bodnes');
+  useDocumentTitle('Productos recomendados | STL Premium');
   useScrollTop();
 
   const {

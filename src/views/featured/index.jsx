@@ -5,7 +5,7 @@ import bannerImg from '@/images/banner-guy.png';
 import React from 'react';
 
 const FeaturedProducts = () => {
-  useDocumentTitle('Productos destacados | Bodnes');
+  useDocumentTitle('Productos destacados | STL Premium');
   useScrollTop();
 
   const {

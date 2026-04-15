@@ -164,11 +164,21 @@
   padding-top: 4rem;
   border-top: 1px solid $border-color;
 
-  @media (max-width: 600px) { gap: 2rem; flex-wrap: wrap; }
+  @media (max-width: 600px) {
+    gap: 1.5rem 0;
+    flex-wrap: wrap;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 
 .hero-stat {
   text-align: center;
+
+  @media (max-width: 600px) {
+    width: 50%;
+    flex-shrink: 0;
+  }
 
   .stat-number {
     display: block;

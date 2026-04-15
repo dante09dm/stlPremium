@@ -5,7 +5,7 @@ const useDocumentTitle = (title) => {
     if (title) {
       document.title = title;
     } else {
-      document.title = 'Bodnes';
+      document.title = 'STL Premium';
     }
   }, [title]);
 };

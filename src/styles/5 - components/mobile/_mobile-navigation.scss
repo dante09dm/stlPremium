@@ -3,10 +3,11 @@
   position: fixed;
   top: 0;
   left: 0;
-  // background: $background-color;
-  background: #fff;
+  background: $bg-800;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   z-index: map-get($z-index, 'navigation');
-  box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
 }
 
 .mobile-navigation-main {
