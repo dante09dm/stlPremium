@@ -82,6 +82,7 @@
     "redux-thunk": "^2.3.0",
     "three": "^0.170.0",
     "uuid": "^8.3.2",
-    "webfontloader": "^1.6.28"
+    "webfontloader": "^1.6.28",
+    "yup": "^1.7.1"
   }
 }
