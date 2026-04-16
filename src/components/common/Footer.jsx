@@ -2,7 +2,7 @@ import * as Route from '@/constants/routes';
 import logo from '@/images/logo-full.png';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { FaInstagram, FaFacebook, FaWhatsapp } from 'react-icons/fa';
+import { FaInstagram, FaFacebook } from 'react-icons/fa';
 
 const Footer = () => {
   const { pathname } = useLocation();
@@ -60,14 +60,6 @@ const Footer = () => {
               height: '60px' 
             }} 
           />
-        </a>
-        <a
-          href="https://wa.me/+542323555288"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ display: 'inline-block' }}
-        >
-          <FaWhatsapp style={{ fontSize: '60px', color: '#25D366', width: '60px', height: '60px' }} />
         </a>
       </div>
     </footer>
