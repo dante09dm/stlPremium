@@ -39,6 +39,7 @@ const ProductItem = ({ product }) => {
         previewImageURL={product.previewImageURL || null}
         glbURLs={glbURLs}
         height={200}
+        onNavigate={() => history.push(toProductURL(product.id))}
       />
 
       {/* Info */}

@@ -159,15 +159,16 @@ const ThreeViewer = ({ glbURL, height, onReady }) => {
 };
 
 // ─── Componente principal ──────────────────────────────────────────────────────
-const ProductCardViewer = ({ previewImageURL, glbURLs = [], height = 220 }) => {
+const ProductCardViewer = ({ previewImageURL, glbURLs = [], height = 220, onNavigate }) => {
   const [isHovered,  setIsHovered]  = useState(false);
   const [activeIdx,  setActiveIdx]  = useState(0);
   const [glbVisible, setGlbVisible] = useState(false); // true = GLB opaco, false = PNG visible
   const [isLoading,  setIsLoading]  = useState(false);
 
-  const hovRef    = useRef(false);
-  const timerRef  = useRef(null);
-  const cardRef   = useRef(null);
+  const hovRef       = useRef(false);
+  const timerRef     = useRef(null);
+  const cardRef      = useRef(null);
+  const mouseDownPos = useRef(null);
 
   // Preload del primer GLB cuando la card entra al viewport
   useEffect(() => {
@@ -246,6 +247,19 @@ const ProductCardViewer = ({ previewImageURL, glbURLs = [], height = 220 }) => {
     scheduleCycle(activeIdx);
   };
 
+  // Click vs drag: solo navega si el mouse no se movió más de 5px
+  const handleMouseDown = (e) => {
+    mouseDownPos.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handleMouseUp = (e) => {
+    if (!onNavigate || !mouseDownPos.current) return;
+    const dx = Math.abs(e.clientX - mouseDownPos.current.x);
+    const dy = Math.abs(e.clientY - mouseDownPos.current.y);
+    if (dx < 5 && dy < 5) onNavigate();
+    mouseDownPos.current = null;
+  };
+
   const hasGlb = glbURLs.length > 0 && !!glbURLs[activeIdx];
 
   return (
@@ -254,6 +268,8 @@ const ProductCardViewer = ({ previewImageURL, glbURLs = [], height = 220 }) => {
       style={{ position: 'relative', width: '100%', height: `${height}px`, overflow: 'hidden', backgroundColor: '#0a0a0a', cursor: 'pointer' }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
     >
       {/* ── PNG base — siempre presente, se oculta bajo el GLB ──────────── */}
       {previewImageURL ? (

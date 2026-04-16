@@ -33,13 +33,13 @@ const ProductFeatured = ({ product }) => {
         <div
           className="product-display-img"
           style={{ position: 'relative', overflow: 'hidden' }}
-          onClick={(e) => e.stopPropagation()}
         >
           {product?.id ? (
             <ProductCardViewer
               previewImageURL={product.previewImageURL || null}
               glbURLs={glbURLs}
               height={220}
+              onNavigate={onClickItem}
             />
           ) : (
             <Skeleton width="100%" height="100%" />
