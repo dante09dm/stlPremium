@@ -9,7 +9,7 @@ import {
 import { SIGNIN as ROUTE_SIGNIN } from '@/constants/routes';
 import defaultAvatar from '@/images/defaultAvatar.jpg';
 import defaultBanner from '@/images/defaultBanner.jpg';
-import { call, put } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
 import { signInSuccess, signOutSuccess } from '@/redux/actions/authActions';
 import { clearBasket, setBasketItems } from '@/redux/actions/basketActions';
 import { resetCheckout } from '@/redux/actions/checkoutActions';
@@ -146,9 +146,18 @@ function* authSaga({ type, payload }) {
       if (snapshot.data()) { // if user exists in database
         const user = snapshot.data();
 
+        // Merge guest basket with user's saved basket
+        const guestBasket = yield select((state) => state.basket);
+        const savedBasket = user.basket || [];
+        const mergedBasket = [...savedBasket];
+        guestBasket.forEach((guestItem) => {
+          if (!mergedBasket.some((item) => item.id === guestItem.id)) {
+            mergedBasket.push(guestItem);
+          }
+        });
+
         yield put(setProfile(user));
-        yield put(setBasketItems(user.basket));
-        yield put(setBasketItems(user.basket));
+        yield put(setBasketItems(mergedBasket));
         yield put(signInSuccess({
           id: payload.uid,
           role: user.role,
