@@ -2,7 +2,7 @@ import * as Route from '@/constants/routes';
 import logo from '@/images/logo-full.png';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { FaInstagram, FaFacebook, FaWhatsapp } from 'react-icons/fa'; // Agregado FaWhatsapp
+import { FaInstagram, FaFacebook } from 'react-icons/fa';
 
 const Footer = () => {
   const { pathname } = useLocation();
@@ -56,21 +56,6 @@ const Footer = () => {
             style={{ 
               fontSize: '60px',
               color: '#E4405F', 
-              width: '60px', 
-              height: '60px' 
-            }} 
-          />
-        </a>
-        <a 
-          href="https://wa.me/+5492323641481" // Reemplaza con tu número de WhatsApp
-          target="_blank" 
-          rel="noopener noreferrer"
-          style={{ display: 'inline-block' }}
-        >
-          <FaWhatsapp 
-            style={{ 
-              fontSize: '60px',
-              color: '#25D366', // Color verde de WhatsApp
               width: '60px', 
               height: '60px' 
             }} 

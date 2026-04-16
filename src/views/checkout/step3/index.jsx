@@ -12,24 +12,6 @@ const API_URL = process.env.NODE_ENV === 'development'
   ? 'http://127.0.0.1:5002/bodnes-7e5df/us-central1/createPreference'
   : 'https://us-central1-bodnes-7e5df.cloudfunctions.net/createPreference';
 
-const sendToWhatsApp = (form, subtotal, basket) => {
-  const productDetails = basket.map((product) =>
-    `- ${product.name}: ${displayMoney(product.price)} x ${product.quantity}`
-  ).join('\n');
-
-  const message = `Detalles de la orden:
-  \nNombre: ${form.fullname}
-  \nEmail: ${form.email}
-  \nNúmero de teléfono: ${form.mobile?.dialCode} ${form.mobile?.value}
-  \nProductos:\n${productDetails}
-  \nTotal: ${displayMoney(subtotal)}`;
-
-  const phoneNumber = "+542323641481";
-  window.open(
-    `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`,
-    '_blank'
-  );
-};
 
 const Payment = () => {
   const history = useHistory();
@@ -137,14 +119,6 @@ const Payment = () => {
               </button>
             )}
 
-            <button
-              className="button"
-              style={{ backgroundColor: '#25D366', color: 'white' }}
-              onClick={() => sendToWhatsApp(shipping, safeSubtotal, basket)}
-              disabled={!shipping?.fullname || !shipping?.mobile?.value}
-            >
-              Enviar detalles por WhatsApp
-            </button>
           </div>
 
           <div className="checkout-shipping-action" style={{ marginTop: '2rem' }}>
