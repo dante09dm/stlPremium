@@ -103,7 +103,7 @@ const UserOrdersTab = () => {
     return (
       <div className="loader" style={{ minHeight: '50vh' }}>
         <LoadingOutlined style={{ fontSize: '2rem' }} />
-        <h6>Cargando compras...</h6>
+        <h6>Cargando archivos...</h6>
       </div>
     );
   }
@@ -115,15 +115,15 @@ const UserOrdersTab = () => {
         alignItems: 'center', justifyContent: 'center', gap: '1rem', color: '#555'
       }}>
         <ShoppingOutlined style={{ fontSize: '4rem', color: '#333' }} />
-        <h3 style={{ margin: 0, color: '#94a3b8' }}>Mis compras</h3>
-        <p style={{ margin: 0 }}>No tenés ninguna compra todavía</p>
+        <h3 style={{ margin: 0, color: '#94a3b8' }}>Mis archivos</h3>
+        <p style={{ margin: 0 }}>No tenés ningún archivo todavía</p>
       </div>
     );
   }
 
   return (
     <div style={{ padding: '1rem 0' }}>
-      <h3 style={{ marginBottom: '1.5rem', color: '#f1f5f9' }}>Mis compras</h3>
+      <h3 style={{ marginBottom: '1.5rem', color: '#f1f5f9' }}>Mis archivos</h3>
 
       <div style={{ display: 'grid', gap: '1.5rem' }}>
         {orders.map((order) => (

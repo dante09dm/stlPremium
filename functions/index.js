@@ -15,7 +15,7 @@ const db = getFirestore(adminApp);
 // Environment configuration
 const isProduction = process.env.NODE_ENV === 'production';
 const baseUrl = isProduction
-  ? 'https://www.bodnes.com'
+  ? 'https://www.stlpremium.com'
   : 'http://localhost:3000';
 
 // Rate limiter configuration (10 requests per minute per IP)
@@ -47,9 +47,9 @@ try {
 const corsHandler = cors({
   origin: [
     'http://localhost:3000',
-    'https://bodnes-7e5df.web.app',
-    'https://www.bodnes.com',
-    'https://bodnes.com'
+    'https://stlpremium99.web.app',
+    'https://www.stlpremium.com',
+    'https://stlpremium.com'
   ],
   methods: ['POST', 'OPTIONS'],
   credentials: true
@@ -175,7 +175,7 @@ async function processPayment(req, res) {
         auto_return: "approved",
         binary_mode: true,
         notification_url: isProduction
-          ? "https://us-central1-bodnes-7e5df.cloudfunctions.net/mercadopagoWebhook"
+          ? "https://us-central1-stlpremium99.cloudfunctions.net/mercadopagoWebhook"
           : undefined
       }
     });
@@ -188,6 +188,7 @@ async function processPayment(req, res) {
       items: formattedItems,
       // Guardamos también los productIds para poder dar acceso a los STL
       productIds: req.body.productIds || [],
+      userId: req.body.userId || null,
       createdAt: new Date().getTime(),
       status: 'pending'
     });
@@ -203,8 +204,8 @@ async function processPayment(req, res) {
       });
 
       await transporter.sendMail({
-        from: `"Bodnes Bot" <${process.env.EMAIL_USER || config().email?.user}>`,
-        to: 'Bodnescontacto@gmail.com',
+        from: `"STL Premium Bot" <${process.env.EMAIL_USER || config().email?.user}>`,
+        to: 'dante09dmm@gmail.com',
         subject: '🛒 Nuevo intento de compra en Bodnes',
         html: `
           <h2>Nuevo intento de compra</h2>
@@ -300,12 +301,13 @@ async function processWebhook(req, res) {
       items = pendingData.items || [];
     }
 
-    // Buscar usuario por email en Firestore
-    const usersSnap = await db.collection('users').where('email', '==', payerEmail).limit(1).get();
-    let userId = null;
+    // Usar userId del payload si viene, sino buscar por email
+    let userId = pendingSnap.exists ? (pendingSnap.data().userId || null) : null;
+    let usersSnap = null;
 
-    if (!usersSnap.empty) {
-      userId = usersSnap.docs[0].id;
+    if (!userId) {
+      usersSnap = await db.collection('users').where('email', '==', payerEmail).limit(1).get();
+      if (!usersSnap.empty) userId = usersSnap.docs[0].id;
     }
 
     // Guardar la orden en Firestore
@@ -330,8 +332,9 @@ async function processWebhook(req, res) {
 
     // Si el usuario está registrado, guardar referencia en su documento
     if (userId) {
+      const userDoc = await db.collection('users').doc(userId).get();
       await db.collection('users').doc(userId).update({
-        orders: [...(usersSnap.docs[0].data().orders || []), paymentId]
+        orders: [...(userDoc.data()?.orders || []), paymentId]
       });
     }
 
@@ -353,15 +356,15 @@ async function processWebhook(req, res) {
       });
 
       await transporter.sendMail({
-        from: `"Bodnes" <${process.env.EMAIL_USER || config().email?.user}>`,
+        from: `"STL Premium" <${process.env.EMAIL_USER || config().email?.user}>`,
         to: payerEmail,
         subject: '✅ Tu compra fue aprobada — Bodnes',
         html: `
           <h2>¡Gracias por tu compra!</h2>
-          <p>Tu pago fue aprobado. Podés descargar tus archivos STL desde tu cuenta en <a href="${baseUrl}/account">bodnes.com/account</a></p>
+          <p>Tu pago fue aprobado. Podés descargar tus archivos STL desde tu cuenta en <a href="${baseUrl}/account">stlpremium.com/account</a></p>
           <h3>Items comprados:</h3>
           <ul>${items.map(i => `<li>${i.title}</li>`).join('')}</ul>
-          <p>Si tenés algún problema escribinos a Bodnescontacto@gmail.com</p>
+          <p>Si tenés algún problema escribinos a dante09dmm@gmail.com</p>
         `
       });
     } catch (emailError) {

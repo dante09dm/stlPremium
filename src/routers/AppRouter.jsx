@@ -84,7 +84,19 @@ const AppRouter = () => (
         <ClientRoute
           component={view.CheckOutStep3}
           path={ROUTES.CHECKOUT_STEP_3}
-          allowUnauthenticated={true} // Permitir acceso sin autenticación
+          allowUnauthenticated={true}
+        />
+        <Route
+          component={view.CheckoutSuccess}
+          path={ROUTES.CHECKOUT_SUCCESS}
+        />
+        <Route
+          component={view.CheckoutFailure}
+          path={ROUTES.CHECKOUT_FAILURE}
+        />
+        <Route
+          component={view.CheckoutPending}
+          path={ROUTES.CHECKOUT_PENDING}
         />
 <AdminRoute
           component={view.Dashboard}

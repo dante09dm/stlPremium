@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { displayMoney } from '@/helpers/utils';
+
 import { StepTracker } from '../components';
 import { Boundary } from '@/components/common';
 import { CHECKOUT_STEP_2 } from '@/constants/routes';
@@ -9,17 +10,18 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 
 const API_URL = process.env.NODE_ENV === 'development'
-  ? 'http://127.0.0.1:5002/bodnes-7e5df/us-central1/createPreference'
-  : 'https://us-central1-bodnes-7e5df.cloudfunctions.net/createPreference';
+  ? 'http://127.0.0.1:5002/stlpremium99/us-central1/createPreference'
+  : 'https://us-central1-stlpremium99.cloudfunctions.net/createPreference';
 
 
 const Payment = () => {
   const history = useHistory();
 
-  const { basket, subtotal, shipping } = useSelector((state) => ({
+  const { basket, subtotal, shipping, userId } = useSelector((state) => ({
     basket: state.basket,
     subtotal: state.checkout.subtotal,
-    shipping: state.checkout.shipping
+    shipping: state.checkout.shipping,
+    userId: state.auth?.id || null
   }));
 
   const [preferenceId, setPreferenceId] = useState(null);
@@ -51,8 +53,8 @@ const Payment = () => {
 
       const payloadData = {
         items,
-        // ── IDs de productos para registrar acceso a STL post-compra ──
         productIds: basket.map(product => product.id),
+        userId: userId || null,
         payer: {
           email: shipping?.email || 'client@example.com',
           name: shipping?.fullname?.split(' ')[0] || '',

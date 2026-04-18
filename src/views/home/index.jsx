@@ -47,7 +47,7 @@ const Home = () => {
             </h1>
             <p className="hero-sub">
               Modelos STL premium listos para imprimir. Elegí tu color de filamento,
-              previeweá en 3D y descargá al instante.
+              preview en 3D y descargá al instante.
             </p>
             <div className="hero-actions">
               <Link to={SHOP} className="btn-primary">

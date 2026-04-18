@@ -18,4 +18,7 @@ export const FORGOT_PASSWORD = '/forgot_password';
 export const CHECKOUT_STEP_1 = '/checkout/step1';
 export const CHECKOUT_STEP_2 = '/checkout/step2';
 export const CHECKOUT_STEP_3 = '/checkout/step3';
+export const CHECKOUT_SUCCESS = '/checkout/success';
+export const CHECKOUT_FAILURE = '/checkout/failure';
+export const CHECKOUT_PENDING = '/checkout/pending';
 export const VIEW_PRODUCT = '/product/:id';
