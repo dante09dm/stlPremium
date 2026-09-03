@@ -57,6 +57,7 @@
     "@ant-design/icons": "^4.6.2",
     "@google-cloud/storage": "^7.19.0",
     "@mercadopago/sdk-react": "^1.0.0",
+    "animejs": "^4.3.6",
     "firebase": "^8.4.3",
     "formik": "^2.2.6",
     "history": "^4.10.0",

@@ -83,45 +83,35 @@ const Home = () => {
         {/* ── Productos destacados ────────────────────────────────────────── */}
         <div style={{ padding: '0 8rem' }}>
 
-          <div className="display">
-            <div className="display-header">
-              <h1>Productos destacados</h1>
-              <Link to={FEATURED_PRODUCTS}>Ver todos →</Link>
-            </div>
-            {(errorFeatured && !isLoadingFeatured) ? (
-              <MessageDisplay
-                message={errorFeatured}
-                action={fetchFeaturedProducts}
-                buttonLabel="Reintentar"
-              />
-            ) : (
+          {!errorFeatured && (
+            <div className="display">
+              <div className="display-header">
+                <h1>Productos destacados</h1>
+                <Link to={FEATURED_PRODUCTS}>Ver todos →</Link>
+              </div>
               <ProductShowcaseGrid
                 products={featuredProducts}
                 skeletonCount={6}
               />
-            )}
-          </div>
-
-          <div className="section-divider" />
-
-          <div className="display">
-            <div className="display-header">
-              <h1>Recomendados</h1>
-              <Link to={RECOMMENDED_PRODUCTS}>Ver todos →</Link>
             </div>
-            {(errorRecommended && !isLoadingRecommended) ? (
-              <MessageDisplay
-                message={errorRecommended}
-                action={fetchRecommendedProducts}
-                buttonLabel="Reintentar"
-              />
-            ) : (
+          )}
+
+          {!errorFeatured && !errorRecommended && (
+            <div className="section-divider" />
+          )}
+
+          {!errorRecommended && (
+            <div className="display">
+              <div className="display-header">
+                <h1>Recomendados</h1>
+                <Link to={RECOMMENDED_PRODUCTS}>Ver todos →</Link>
+              </div>
               <ProductShowcaseGrid
                 products={recommendedProducts}
                 skeletonCount={6}
               />
-            )}
-          </div>
+            </div>
+          )}
 
         </div>
       </div>

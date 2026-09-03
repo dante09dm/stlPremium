@@ -23,12 +23,12 @@ const ProductFeatured = ({ product }) => {
   }, [product?.id]); // eslint-disable-line
 
   return (
-    <SkeletonTheme color="#1a2332" highlightColor="#243044">
+    <SkeletonTheme color="#1a1a1a" highlightColor="#2a2a2a">
       <div
         className="product-display"
         onClick={onClickItem}
         role="presentation"
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: 'pointer', animation: !product?.id ? 'fadeIn 280ms ease-out' : 'none' }}
       >
         <div
           className="product-display-img"

@@ -71,40 +71,15 @@ const ViewProduct = () => {
 
             {/* ── Panel izquierdo: visor 3D ── */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-
-              {/* Visor Three.js con color chooser */}
               <ModelViewer
                 glbURL={selectedModel?.glbURL || null}
                 availableColors={product.availableColors || null}
                 height={380}
                 autoRotate={true}
+                models={product.models || null}
+                selectedModelIndex={selectedModelIndex}
+                onSelectModel={setSelectedModelIndex}
               />
-
-              {/* Miniaturas de modelos del bundle */}
-              {product.models?.length > 1 && (
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  {product.models.map((model, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => setSelectedModelIndex(i)}
-                      style={{
-                        padding: '0.4rem 0.75rem',
-                        backgroundColor: selectedModelIndex === i ? '#ff2442' : '#f1f5f9',
-                        color: selectedModelIndex === i ? '#fff' : '#374151',
-                        border: selectedModelIndex === i ? '2px solid #ff2442' : '2px solid #e2e8f0',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontSize: '0.8rem',
-                        fontWeight: '600',
-                        transition: 'all 0.15s'
-                      }}
-                    >
-                      {model.name || `Modelo ${i + 1}`}
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* ── Panel derecho: detalles ── */}
@@ -142,7 +117,14 @@ const ViewProduct = () => {
               <div className="divider" />
               <br />
 
-              <h1>{displayMoney(product.price)}</h1>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <h1 style={{ margin: 0 }}>{displayMoney(product.price)}</h1>
+                {product.models?.length > 1 && (
+                  <span style={{ fontSize: '0.95rem', color: '#94a3b8', fontWeight: '600' }}>
+                    c/u
+                  </span>
+                )}
+              </div>
 
               <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '1.5rem' }}>
                 Después de la compra podés descargar los archivos STL desde tu cuenta.
@@ -170,21 +152,15 @@ const ViewProduct = () => {
             </div>
           </div>
 
-          {/* Productos recomendados */}
-          <div style={{ marginTop: '10rem' }}>
-            <div className="display-header">
-              <h1>Recomendados</h1>
-            </div>
-            {errorRecommended && !isLoadingRecommended ? (
-              <MessageDisplay
-                message={errorRecommended}
-                action={fetchRecommendedProducts}
-                buttonLabel="Reintentar"
-              />
-            ) : (
+          {/* Productos recomendados — se oculta si la query devuelve vacío */}
+          {!errorRecommended && (
+            <div style={{ marginTop: '10rem' }}>
+              <div className="display-header">
+                <h1>Recomendados</h1>
+              </div>
               <ProductShowcaseGrid products={recommendedProducts} skeletonCount={3} />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
     </main>

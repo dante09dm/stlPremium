@@ -12,12 +12,12 @@ const ProductItem = ({ product }) => {
 
   if (!product.id) {
     return (
-      <div className="product-card product-loading">
-        <div className="product-card-img-wrapper" />
-        <div className="product-card-content product-details">
-          <div className="product-card-name" style={{ background: '#2a2a2a', height: 14, borderRadius: 4, marginBottom: 6 }} />
-          <div className="product-card-brand" style={{ background: '#222', height: 10, borderRadius: 4, width: '60%', margin: '0 auto 6px' }} />
-          <div style={{ background: '#222', height: 12, borderRadius: 4, width: '40%', margin: '0 auto' }} />
+      <div className="product-card product-loading" style={{ animation: 'fadeIn 280ms ease-out' }}>
+        <div className="product-card-img-wrapper skeleton-shimmer" style={{ height: 200, borderRadius: '8px 8px 0 0' }} />
+        <div className="product-card-content product-details" style={{ padding: '0.8rem 1rem' }}>
+          <div className="skeleton-shimmer--soft" style={{ height: 14, marginBottom: 8, width: '85%' }} />
+          <div className="skeleton-shimmer--soft" style={{ height: 10, width: '60%', margin: '0 auto 8px' }} />
+          <div className="skeleton-shimmer--soft" style={{ height: 12, width: '40%', margin: '0 auto' }} />
         </div>
       </div>
     );

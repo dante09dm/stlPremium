@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { animate } from 'animejs';
 import { makeLoader } from './ProductCardViewer.jsx';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -22,31 +23,33 @@ export const FILAMENT_COLORS = [
   { name: 'Natural',       hex: '#E8DCC8', threejs: 0xE8DCC8 },
 ];
 
-/**
- * Visor 3D de modelos GLB con selector de color de filamento.
- *
- * Props:
- *   glbURL        {string}   URL del archivo GLB en Firebase Storage
- *   availableColors {array}  (opcional) subset de FILAMENT_COLORS para este producto
- *   height        {number}   altura del canvas en px (default 380)
- *   autoRotate    {boolean}  rotación automática (default true)
- */
 const ModelViewer = ({
   glbURL,
   availableColors,
   height = 380,
   autoRotate = true,
+  models = null,
+  selectedModelIndex = 0,
+  onSelectModel = null,
 }) => {
+  const hasMultipleModels = !!(models && models.length > 1 && onSelectModel);
   const mountRef = useRef(null);
+  const canvasWrapperRef = useRef(null);
   const rendererRef = useRef(null);
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
   const controlsRef = useRef(null);
   const animFrameRef = useRef(null);
   const modelRef = useRef(null);
+  const loadIdRef = useRef(0);
+  const isFirstLoadRef = useRef(true);
+  const chipRefs = useRef([]);
+  const prevSelectedIdxRef = useRef(selectedModelIndex);
 
   const colors = availableColors || FILAMENT_COLORS;
-  const [selectedColor, setSelectedColor] = useState(colors[0]);
+  // Default = Plata: el acabado metálico hace que se aprecien los detalles del modelo
+  const defaultColor = colors.find((c) => c.name === 'Plata') || colors[0];
+  const [selectedColor, setSelectedColor] = useState(defaultColor);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -58,20 +61,18 @@ const ModelViewer = ({
     const w = container.clientWidth || 400;
     const h = height;
 
-    // Escena
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf3f4f6);
+    scene.background = null;
     sceneRef.current = scene;
 
-    // Cámara
     const camera = new THREE.PerspectiveCamera(45, w / h, 0.01, 1000);
     camera.position.set(0, 0.2, 3.2);
     cameraRef.current = camera;
 
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(w, h);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0);
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
@@ -80,7 +81,6 @@ const ModelViewer = ({
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Luces
     scene.add(new THREE.AmbientLight(0xffffff, 0.6));
     const key = new THREE.DirectionalLight(0xffffff, 1.2);
     key.position.set(3, 5, 3);
@@ -89,7 +89,6 @@ const ModelViewer = ({
     fill.position.set(-3, 2, -3);
     scene.add(fill);
 
-    // Controles
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.07;
@@ -99,15 +98,13 @@ const ModelViewer = ({
     controls.maxDistance = 10;
     controlsRef.current = controls;
 
-    // Loop
-    const animate = () => {
-      animFrameRef.current = requestAnimationFrame(animate);
+    const animateLoop = () => {
+      animFrameRef.current = requestAnimationFrame(animateLoop);
       controls.update();
       renderer.render(scene, camera);
     };
-    animate();
+    animateLoop();
 
-    // Responsive
     const onResize = () => {
       const nw = container.clientWidth;
       camera.aspect = nw / h;
@@ -131,53 +128,124 @@ const ModelViewer = ({
   useEffect(() => {
     if (!sceneRef.current || !glbURL) return;
 
-    setIsLoading(true);
+    const loadId = ++loadIdRef.current;
+    const isFirst = isFirstLoadRef.current;
+    isFirstLoadRef.current = false;
+    const wrapper = canvasWrapperRef.current;
+
+    if (isFirst) setIsLoading(true);
     setError(null);
 
-    // Remover modelo anterior
-    if (modelRef.current) {
-      sceneRef.current.remove(modelRef.current);
-      modelRef.current = null;
+    let fadeOutPromise = Promise.resolve();
+    if (modelRef.current && wrapper && !isFirst) {
+      fadeOutPromise = animate(wrapper, {
+        opacity: [1, 0],
+        duration: 160,
+        ease: 'inOutQuad',
+      });
     }
+
+    const disposeModel = (m) => {
+      m.traverse((child) => {
+        if (child.isMesh) {
+          if (child.geometry) child.geometry.dispose();
+          if (child.material) {
+            if (Array.isArray(child.material)) child.material.forEach((mat) => mat.dispose());
+            else child.material.dispose();
+          }
+        }
+      });
+    };
 
     const loader = makeLoader();
     loader.load(
       glbURL,
-      (gltf) => {
-        const model = gltf.scene;
+      async (gltf) => {
+        if (loadId !== loadIdRef.current) return;
+        if (!sceneRef.current) return;
 
-        // Centrar y escalar
+        const model = gltf.scene;
         const box = new THREE.Box3().setFromObject(model);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
         model.position.sub(center);
-        model.position.y -= 0.12; // baja levemente el modelo en el encuadre
+        model.position.y -= 0.12;
         if (maxDim > 0) {
           const scale = 1.5 / maxDim;
           model.scale.setScalar(scale);
         }
 
-        // Aplicar color actual
         applyColor(model, selectedColor.threejs);
+
+        try { await fadeOutPromise; } catch (e) { /* noop */ }
+
+        if (loadId !== loadIdRef.current) { disposeModel(model); return; }
+        if (!sceneRef.current) { disposeModel(model); return; }
+
+        if (modelRef.current) {
+          sceneRef.current.remove(modelRef.current);
+          disposeModel(modelRef.current);
+        }
 
         sceneRef.current.add(model);
         modelRef.current = model;
 
-        // Resetear cámara
         if (cameraRef.current) cameraRef.current.position.set(0, 0.2, 3.2);
         if (controlsRef.current) controlsRef.current.reset();
 
         setIsLoading(false);
+
+        if (wrapper && !isFirst) {
+          animate(wrapper, {
+            opacity: [0, 1],
+            duration: 200,
+            ease: 'inOutQuad',
+          });
+        }
       },
       undefined,
       (err) => {
+        if (loadId !== loadIdRef.current) return;
         console.error('Error cargando GLB:', err);
         setError('No se pudo cargar el modelo 3D');
         setIsLoading(false);
+        if (wrapper) {
+          animate(wrapper, { opacity: 1, duration: 200 });
+        }
       }
     );
   }, [glbURL]);
+
+  // ── Animar chip activo cuando cambia el modelo seleccionado ──────────────
+  useEffect(() => {
+    if (prevSelectedIdxRef.current === selectedModelIndex) return;
+    prevSelectedIdxRef.current = selectedModelIndex;
+    const el = chipRefs.current[selectedModelIndex];
+    if (!el) return;
+    animate(el, {
+      scale: [1, 1.12, 1],
+      duration: 380,
+      ease: 'outQuad',
+    });
+  }, [selectedModelIndex]);
+
+  // ── Pre-cache de los GLB del bundle para que cambiar de modelo sea instantáneo ──
+  useEffect(() => {
+    if (!models || models.length <= 1) return;
+    const controllers = models
+      .filter((m) => m.glbURL)
+      .map((m) => {
+        const ctrl = new AbortController();
+        fetch(m.glbURL, { signal: ctrl.signal })
+          .then((res) => res.arrayBuffer())
+          .catch(() => {});
+        return ctrl;
+      });
+    return () => {
+      controllers.forEach((c) => c.abort());
+    };
+  }, [models]);
 
   // ── Cambiar color en tiempo real ──────────────────────────────────────────
   useEffect(() => {
@@ -200,10 +268,22 @@ const ModelViewer = ({
 
   return (
     <div style={{ userSelect: 'none' }}>
-      {/* Canvas */}
-      {/* Wrapper: Three.js canvas + overlays sin mezclar con React DOM */}
-      <div style={{ position: 'relative', width: '100%', height: `${height}px`, borderRadius: '12px', overflow: 'hidden', backgroundColor: '#f3f4f6' }}>
-        {/* Canvas Three.js — React no renderiza nada adentro */}
+      <div
+        ref={canvasWrapperRef}
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: `${height}px`,
+          borderRadius: '12px',
+          overflow: 'hidden',
+          backgroundColor: '#15181f',
+          backgroundImage: [
+            'radial-gradient(ellipse 50% 18% at 50% 92%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 70%)',
+            'radial-gradient(ellipse 75% 65% at 50% 38%, #2a3140 0%, #1a1e26 55%, #0d0f14 100%)',
+          ].join(', '),
+          boxShadow: 'inset 0 0 60px rgba(0,0,0,0.45)',
+        }}
+      >
         <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
 
         {isLoading && (
@@ -211,12 +291,12 @@ const ModelViewer = ({
             position: 'absolute', inset: 0,
             display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center',
-            backgroundColor: '#f3f4f6', zIndex: 2,
+            backgroundColor: 'transparent', zIndex: 2,
             gap: '0.75rem', color: '#94a3b8'
           }}>
             <div style={{
               width: 36, height: 36,
-              border: '3px solid #e2e8f0',
+              border: '3px solid rgba(148,163,184,0.25)',
               borderTop: '3px solid #ff2442',
               borderRadius: '50%',
               animation: 'spin 0.8s linear infinite'
@@ -242,16 +322,104 @@ const ModelViewer = ({
             Sin modelo disponible
           </div>
         )}
+
+        {hasMultipleModels && (
+          <>
+            <button
+              type="button"
+              onClick={() => onSelectModel(
+                (selectedModelIndex - 1 + models.length) % models.length
+              )}
+              aria-label="Modelo anterior"
+              style={{
+                position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)',
+                zIndex: 6, background: 'rgba(0,0,0,0.55)', border: 'none', borderRadius: '50%',
+                width: 36, height: 36, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#fff', fontSize: '1.2rem', backdropFilter: 'blur(4px)',
+                WebkitBackdropFilter: 'blur(4px)',
+                transition: 'background 0.2s',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,36,66,0.75)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(0,0,0,0.55)'; }}
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              onClick={() => onSelectModel(
+                (selectedModelIndex + 1) % models.length
+              )}
+              aria-label="Modelo siguiente"
+              style={{
+                position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
+                zIndex: 6, background: 'rgba(0,0,0,0.55)', border: 'none', borderRadius: '50%',
+                width: 36, height: 36, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#fff', fontSize: '1.2rem', backdropFilter: 'blur(4px)',
+                WebkitBackdropFilter: 'blur(4px)',
+                transition: 'background 0.2s',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,36,66,0.75)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(0,0,0,0.55)'; }}
+            >
+              ›
+            </button>
+          </>
+        )}
+
+        {hasMultipleModels && (
+          <div style={{
+            position: 'absolute',
+            left: '50%',
+            bottom: '0.75rem',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            gap: '0.4rem',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            maxWidth: 'calc(100% - 6rem)',
+            padding: '0.35rem 0.5rem',
+            backgroundColor: 'rgba(17, 24, 39, 0.55)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
+            borderRadius: '10px',
+            zIndex: 5,
+            pointerEvents: 'auto',
+          }}>
+            {models.map((model, i) => (
+              <button
+                key={i}
+                type="button"
+                ref={(el) => { chipRefs.current[i] = el; }}
+                onClick={() => onSelectModel(i)}
+                style={{
+                  padding: '0.3rem 0.65rem',
+                  backgroundColor: selectedModelIndex === i ? '#ff2442' : 'rgba(255,255,255,0.9)',
+                  color: selectedModelIndex === i ? '#fff' : '#111827',
+                  border: selectedModelIndex === i ? '1px solid #ff2442' : '1px solid rgba(255,255,255,0.6)',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '0.72rem',
+                  fontWeight: '600',
+                  transition: 'background-color 0.15s, color 0.15s, border 0.15s',
+                  whiteSpace: 'nowrap',
+                  willChange: 'transform',
+                }}
+              >
+                {model.name || `Modelo ${i + 1}`}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Hint de interacción */}
       {!isLoading && !error && glbURL && (
         <p style={{ textAlign: 'center', fontSize: '0.72rem', color: '#94a3b8', margin: '0.4rem 0 0.75rem' }}>
           Arrastrá para rotar · Scroll para zoom
         </p>
       )}
 
-      {/* Color chooser */}
       <div style={{ marginTop: '0.5rem', marginBottom: '1rem', paddingLeft: '0.25rem' }}>
         <p style={{ fontSize: '0.8rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
           Color de filamento:&nbsp;

@@ -1,5 +1,6 @@
 import { Basket } from '@/components/basket';
 import { Footer, Navigation } from '@/components/common';
+import RouteTransition from '@/components/common/RouteTransition';
 import * as ROUTES from '@/constants/routes';
 import { createBrowserHistory } from 'history';
 import React from 'react';
@@ -16,6 +17,7 @@ const AppRouter = () => (
     <>
       <Navigation />
       <Basket />
+      <RouteTransition>
       <Switch>
         <Route
           component={view.Search}
@@ -123,6 +125,7 @@ const AppRouter = () => (
         
         <PublicRoute component={view.PageNotFound} />
       </Switch>
+      </RouteTransition>
       <Footer />
     </>
   </Router>

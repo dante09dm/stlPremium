@@ -40,13 +40,14 @@ const ThreeViewer = ({ glbURL, height, onReady }) => {
     let cancelled = false;
 
     const scene    = new THREE.Scene();
-    scene.background = new THREE.Color(0x0a0a0a);
+    scene.background = null;
 
     const camera   = new THREE.PerspectiveCamera(45, w / h, 0.01, 1000);
     camera.position.set(0, 0.1, 2.8);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(w, h);
+    renderer.setClearColor(0x000000, 0);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     try { renderer.outputColorSpace = THREE.SRGBColorSpace; }
     catch (_) { renderer.outputEncoding = THREE.sRGBEncoding; } // eslint-disable-line
@@ -88,7 +89,8 @@ const ThreeViewer = ({ glbURL, height, onReady }) => {
       const maxDim = Math.max(size.x, size.y, size.z);
       if (maxDim > 0) model.scale.setScalar(1.4 / maxDim);
       model.traverse((c) => {
-        if (c.isMesh) c.material = new THREE.MeshStandardMaterial({ color: 0x9aaabb, metalness: 0.35, roughness: 0.4 });
+        // Mismo acabado Plata que el visor grande — se ven mucho mejor los detalles del modelo
+        if (c.isMesh) c.material = new THREE.MeshStandardMaterial({ color: 0xC0C0C0, metalness: 0.6, roughness: 0.2 });
       });
       scene.add(model);
       s.mesh = model;
@@ -265,7 +267,19 @@ const ProductCardViewer = ({ previewImageURL, glbURLs = [], height = 220, onNavi
   return (
     <div
       ref={cardRef}
-      style={{ position: 'relative', width: '100%', height: `${height}px`, overflow: 'hidden', backgroundColor: '#0a0a0a', cursor: 'pointer' }}
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: `${height}px`,
+        overflow: 'hidden',
+        cursor: 'pointer',
+        backgroundColor: '#15181f',
+        backgroundImage: [
+          'radial-gradient(ellipse 50% 18% at 50% 92%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 70%)',
+          'radial-gradient(ellipse 75% 65% at 50% 38%, #2a3140 0%, #1a1e26 55%, #0d0f14 100%)',
+        ].join(', '),
+        boxShadow: 'inset 0 0 40px rgba(0,0,0,0.4)',
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onMouseDown={handleMouseDown}
