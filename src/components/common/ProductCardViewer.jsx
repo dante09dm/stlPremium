@@ -219,6 +219,11 @@ const ProductCardViewer = ({ previewImageURL, glbURLs = [], height = 220, onNavi
     }, 4500);
   };
 
+  // Las flechas viven dentro del div que navega en mouseUp (handleMouseUp).
+  // stopPropagation en click no alcanza: mousedown/mouseup también suben al div
+  // y disparan onNavigate(). Hay que frenarlos en las flechas.
+  const stopMouse = (e) => e.stopPropagation();
+
   // Navegación manual con flechas
   const navigateTo = (e, nextIdx) => {
     e.stopPropagation();
@@ -351,6 +356,8 @@ const ProductCardViewer = ({ previewImageURL, glbURLs = [], height = 220, onNavi
         <>
           <button
             onClick={handlePrev}
+            onMouseDown={stopMouse}
+            onMouseUp={stopMouse}
             style={{
               position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)',
               zIndex: 6, background: 'rgba(0,0,0,0.55)', border: 'none', borderRadius: '50%',
@@ -366,6 +373,8 @@ const ProductCardViewer = ({ previewImageURL, glbURLs = [], height = 220, onNavi
           </button>
           <button
             onClick={handleNext}
+            onMouseDown={stopMouse}
+            onMouseUp={stopMouse}
             style={{
               position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
               zIndex: 6, background: 'rgba(0,0,0,0.55)', border: 'none', borderRadius: '50%',
